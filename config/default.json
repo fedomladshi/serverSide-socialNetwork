@@ -1,0 +1,5 @@
+{
+     "mongoURI":"mongodb+srv://fedoladshi:QMp6t5EeFBmXXBf6@cluster0-bppfe.mongodb.net/test?retryWrites=true&w=majority",
+     "POST": "5000",
+     "jwtSecret": "privet"
+}
