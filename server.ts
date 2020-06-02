@@ -1,3 +1,4 @@
+import fileUpload from 'express-fileupload';
 import express from 'express'
 import path from "path";
 import {startDB} from './config/db'
@@ -11,7 +12,6 @@ startDB();
 app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
-console.log(path.join(__dirname, "uploads"))
 
 // Define Routes
 app.use('/api/users', require('./routes/api/user.routes'));

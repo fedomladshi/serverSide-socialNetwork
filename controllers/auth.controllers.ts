@@ -1,6 +1,17 @@
+import { createFolder } from "./../utils/createFolder";
 import { RequestHandler } from "express";
 import { registerValidation, loginValidation } from "../vaidation";
 import AuthService from "../services/auth.services";
+import { IUserSchema } from "../models/user.model";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: IUserSchema;
+      path: string;
+    }
+  }
+}
 
 class AuthController {
   static registration: RequestHandler = async (req, res) => {
@@ -8,6 +19,10 @@ class AuthController {
     if (error) return res.status(400).send(error.details[0].message);
 
     try {
+      createFolder(`../uploads/users/${req.body.email}`);
+      createFolder(`../uploads/users/${req.body.email}/images`);
+      createFolder(`../uploads/users/${req.body.email}/images/avatar`);
+
       await AuthService.registration(req.body);
 
       res.json({ msg: "User has beed registred" });

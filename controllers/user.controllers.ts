@@ -1,5 +1,8 @@
 import { RequestHandler } from "express";
 import UserService from "../services/user.services";
+import uploadAvatar from "../middleware/uploadAvatar";
+import fs from "fs";
+import path from "path";
 
 class UserController {
   static getUsers: RequestHandler = async (req, res) => {
@@ -22,10 +25,64 @@ class UserController {
   };
   static updateUserStatus: RequestHandler = async (req, res) => {
     try {
-      await UserService.updateUserStatus(req.user, req.body.status);
-      res.json({ msg: "User status has been updated" });
+      const user = await UserService.updateUserStatus(
+        req.user,
+        req.body.status
+      );
+      res.json({ user });
     } catch (error) {
       console.error(error.message);
+      res.status(500).send("Server Error");
+    }
+  };
+  static updateUserAvatar: RequestHandler = async (req, res) => {
+    try {
+      console.log(req.body)
+      uploadAvatar(req, res, async (err) => {
+        if (err) {
+          res.status(400).json({ msg: err });
+        } else {
+          if (req.file == undefined) {
+            res.status(400).json({ msg: "Error: No File Selected!" });
+          } else {
+            const data = await UserService.updateUserAvatar(
+              req.user.id,
+              req.file.path
+            );
+            res.json({
+              msg: "Avatar has been successfully changed",
+              destination: data.avatar,
+            });
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
+  static deleteAvatar: RequestHandler = async (req, res) => {
+    try {
+      const directory = `./uploads/users/${req.user.email}/images/avatar`;
+      await fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+        for (const file of files) {
+          fs.unlink(path.join(directory, file), (err) => {
+            if (err) throw err;
+          });
+        }
+      });
+
+      const data = await UserService.deleteUserAvatar(
+        req.user.id,
+        "./uploads/defaults/defaultAvatar.jpg"
+      );
+      res.json({
+        msg: "Avatar has been successfully deleted",
+        destination: data.avatar,
+      });
+    } catch (err) {
+      console.error(err.message);
       res.status(500).send("Server Error");
     }
   };

@@ -1,17 +1,9 @@
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
+import { IUserSchema } from '../models/user.model';
+import {  } from "../interfaces";
 
-declare global {
-
-   namespace Express {
-     interface Request {
-          user: any;
-          path: string;
-      }
-  
-   }
- }
 
 export = function (req, res, next) {
      // Get token from header

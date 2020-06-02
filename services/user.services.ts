@@ -17,11 +17,22 @@ class UserService {
   };
   static updateUserStatus = async ({ id }, status) => {
     const newStatus = status ? status : "set a status message";
-    const user = await User.updateOne({ _id: id }, { status: newStatus });
+    let user = await User.updateOne({ _id: id }, { status: newStatus });
 
     if (!user) {
       throw new Error("No such user");
     }
+    user = await User.findById({ _id: id });
+
+    return user;
+  };
+
+  static updateUserAvatar = async (id, destination) => {
+    return await User.findOneAndUpdate({ _id: id }, { avatar: destination }, { new: true }).select("-_id avatar");
+  };
+
+  static deleteUserAvatar = async (id, destination) => {
+    return await User.findOneAndUpdate({ _id: id }, { avatar: destination }, { new: true }).select("-_id avatar");
   };
 }
 
