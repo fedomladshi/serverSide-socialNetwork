@@ -7,8 +7,18 @@ import path from "path";
 class UserController {
   static getUsers: RequestHandler = async (req, res) => {
     try {
-      const users = await UserService.getUsers();
-      res.json(users);
+      const limit = Number(req.query.limit);
+      const skip = Number(req.query.skip);
+      const gender = req.query.gender;
+      console.log(gender)
+
+      const { users, pages, usersAmount } = await UserService.getUsers(
+        limit,
+        skip,
+        gender,
+        req.user.id
+      );
+      res.json({ users, pages, usersAmount });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Server Error");
@@ -35,9 +45,23 @@ class UserController {
       res.status(500).send("Server Error");
     }
   };
+  static editUser: RequestHandler = async (req, res) => {
+    try {
+      const user = await UserService.editUser(req.user, req.body);
+
+      res.json({
+        user,
+        msg: 'User has been successfuly changed'
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
+
   static updateUserAvatar: RequestHandler = async (req, res) => {
     try {
-      console.log(req.body)
+      console.log(req.body);
       uploadAvatar(req, res, async (err) => {
         if (err) {
           res.status(400).json({ msg: err });
@@ -61,6 +85,7 @@ class UserController {
       res.status(500).send("Server Error");
     }
   };
+
   static deleteAvatar: RequestHandler = async (req, res) => {
     try {
       const directory = `./uploads/users/${req.user.email}/images/avatar`;

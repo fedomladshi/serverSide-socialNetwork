@@ -10,5 +10,6 @@ router.delete('/',auth, UserController.deleteUser);
 router.delete('/avatar',auth, UserController.deleteAvatar);
 router.put('/status', auth, UserController.updateUserStatus);
 router.put('/avatar', auth, uploadAvatar, UserController.updateUserAvatar)
+router.put('/edit', auth, UserController.editUser)
 
 module.exports = router;

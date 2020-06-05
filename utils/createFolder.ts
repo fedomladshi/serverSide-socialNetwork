@@ -1,11 +1,6 @@
 import fs from "fs";
 import path from "path";
 
-export const createFolder = async(url) => {
-     await fs.mkdir(
-          path.join(__dirname, url),
-          (err) => {
-            if (err) throw err;
-          }
-        );
-}
+export const createFolder = (url) => {
+  fs.mkdirSync(path.join(__dirname, url));
+};

@@ -48,8 +48,7 @@ const UserSchema = new Schema(
       default: "None selected",
     },
     hometown: {
-      type: String,
-      default: "None selected",
+      type: String
     },
     friends: [
       {type: Schema.Types.ObjectId,
