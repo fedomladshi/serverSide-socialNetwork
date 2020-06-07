@@ -13,6 +13,7 @@ export interface IUserSchema extends Document {
   relationship: string;
   hometown: string;
   createdAt: string;
+  friends: Array<any>;
   JWTSign: () => string;
 }
 
@@ -48,13 +49,9 @@ const UserSchema = new Schema(
       default: "None selected",
     },
     hometown: {
-      type: String
+      type: String,
     },
-    friends: [
-      {type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    ]
+    friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

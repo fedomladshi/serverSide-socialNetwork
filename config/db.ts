@@ -7,7 +7,8 @@ export const startDB = async () => {
           await mongoose.connect(config.get('mongoURI'), {
                useNewUrlParser: true,
                useUnifiedTopology: true,
-               useCreateIndex: true
+               useCreateIndex: true,
+               useFindAndModify: false
           })
           console.log("запуск ракеты")
      }

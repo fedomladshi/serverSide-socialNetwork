@@ -11,5 +11,8 @@ router.delete('/avatar',auth, UserController.deleteAvatar);
 router.put('/status', auth, UserController.updateUserStatus);
 router.put('/avatar', auth, uploadAvatar, UserController.updateUserAvatar)
 router.put('/edit', auth, UserController.editUser)
+router.post('/add-friend', auth, UserController.addFriend);
+router.post('/remove-friend', auth, UserController.removeFriend);
+router.get('/get-friends', auth, UserController.getFriends);
 
 module.exports = router;

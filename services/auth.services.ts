@@ -45,6 +45,7 @@ class AuthService {
         email: user.email,
         avatar: user.avatar,
         status: user.status,
+        friends: user.friends,
         createdAt: user.createdAt,
       },
     };

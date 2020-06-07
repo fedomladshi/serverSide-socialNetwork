@@ -8,38 +8,47 @@ class UserService {
         $unset: ["relationship"],
       },
       {
-        $match: {
-          _id: { $ne: mongoose.Types.ObjectId(userId) },
-          gender: { $in: [gender] },
-        },
-      },
-      {
         $facet: {
-          totalRecords: [
+          totalData: [
             {
-              $count: "total",
+              $match: {
+                _id: { $ne: mongoose.Types.ObjectId(userId) },
+                gender: { $in: [gender] },
+              },
             },
+            { $skip: skip },
+            { $limit: limit },
           ],
-          data: [
+          totalCount: [
             {
-              $skip: skip,
+              $match: {
+                _id: { $ne: mongoose.Types.ObjectId(userId) },
+                gender: { $in: [gender] },
+              },
             },
-            {
-              $limit: limit,
-            },
+            { $count: "count" },
           ],
         },
       },
-    ])
+    ]);
+    let pages = 0;
+    if (users[0].totalCount[0]) {
+      pages = Math.ceil(users[0].totalCount[0].count / limit);
+    } else {
+      pages = 1;
+      users[0].totalCount[0] = 0;
+      users[0].totalData = "No one user found";
+    }
 
-    const pages = Math.ceil(users[0].totalRecords[0].total / limit);
-    if (!users) {
+    console.log("fdsf", users[0]);
+
+    if (!users[0]) {
       throw new Error("No one user found");
     }
     return {
-      users: users[0].data,
+      users: users[0].totalData,
       pages,
-      usersAmount: users[0].totalRecords[0].total,
+      usersAmount: users[0].totalCount[0].count,
     };
   };
 
@@ -93,6 +102,32 @@ class UserService {
       { avatar: destination },
       { new: true }
     ).select("-_id avatar");
+  };
+
+  static addFriend = async ({ id }, { friendUserId }) => {
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { $push: { friends: friendUserId } },
+      { new: true }
+    );
+    return user.friends;
+  };
+
+  static removeFriend = async ({ id }, { friendUserId }) => {
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { $pull: { friends: friendUserId } },
+      { new: true }
+    );
+    return user.friends;
+  };
+
+  static getFriends = async ({ id }) => {
+    const user = await User.findOne({ _id: id }).populate("friends");
+    if (!user) {
+      throw new Error("You have no friends yet");
+    }
+    return user;
   };
 }
 

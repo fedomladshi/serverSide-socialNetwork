@@ -10,8 +10,6 @@ class UserController {
       const limit = Number(req.query.limit);
       const skip = Number(req.query.skip);
       const gender = req.query.gender;
-      console.log(gender)
-
       const { users, pages, usersAmount } = await UserService.getUsers(
         limit,
         skip,
@@ -20,7 +18,7 @@ class UserController {
       );
       res.json({ users, pages, usersAmount });
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
       res.status(500).send("Server Error");
     }
   };
@@ -51,7 +49,7 @@ class UserController {
 
       res.json({
         user,
-        msg: 'User has been successfuly changed'
+        msg: "User has been successfuly changed",
       });
     } catch (err) {
       console.error(err.message);
@@ -106,6 +104,38 @@ class UserController {
         msg: "Avatar has been successfully deleted",
         destination: data.avatar,
       });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
+  static addFriend: RequestHandler = async (req, res) => {
+    try {
+      const friends = await UserService.addFriend(req.user, req.body);
+      res.json({ msg: "User has beed successfully added to friends", friends });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
+
+  static removeFriend: RequestHandler = async (req, res) => {
+    try {
+      const friends = await UserService.removeFriend(req.user, req.body);
+      res.json({
+        msg: "User has beed successfully removed from friends",
+        friends,
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  };
+
+  static getFriends: RequestHandler = async (req, res) => {
+    try {
+      const user = await UserService.getFriends(req.user);
+      res.json({ friends: user.friends });
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
