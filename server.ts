@@ -15,6 +15,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 // Define Routes
 app.use('/api/users', require('./routes/api/user.routes'));
 app.use('/api/auth', require('./routes/api/auth.routes'));
+app.use('/api/friendship', require('./routes/api/friendship.routes'));
 
 const POST = config.get('POST') || 5000;
 
