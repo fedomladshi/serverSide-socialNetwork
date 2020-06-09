@@ -40,10 +40,13 @@ class AuthService {
     return {
       token,
       user: {
-        id: user.id,
+        _id: user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatar,
+        gender: user.gender,
+        relationship: user.relationship,
+        hometown: user.hometown,
         status: user.status,
         friends: user.friends,
         createdAt: user.createdAt,

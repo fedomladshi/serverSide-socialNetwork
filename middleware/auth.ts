@@ -1,13 +1,11 @@
-import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import { IUserSchema } from '../models/user.model';
 import {  } from "../interfaces";
 
 
 export = function (req, res, next) {
      // Get token from header
-     const token = req.header('x-auth-token');
+     const token = req.headers.authorization.split(' ')[1];
 
      if (!token) {
           return res.status(401).json({ msg: 'No token, authorization denied' });

@@ -40,8 +40,6 @@ class UserService {
       users[0].totalData = "No one user found";
     }
 
-    console.log("fdsf", users[0]);
-
     if (!users[0]) {
       throw new Error("No one user found");
     }
